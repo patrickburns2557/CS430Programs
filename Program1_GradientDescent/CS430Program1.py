@@ -1,15 +1,19 @@
 from pathlib import Path
-
+import matplotlib.pyplot as plt
 
 
 data = []
+xlist = []
+ylist = []
 
 with open(Path(__file__).with_name("data.txt"), 'r') as input:
     line = input.readline()
     while line:
         line = line.split(",")
         x = float(line[0])
+        xlist.append(x)
         y = float(line[1])
+        ylist.append(y)
         data.append([x,y])
         line = input.readline()
 
@@ -56,3 +60,7 @@ print("Slope: " + str(slope))
 print("Intercept: " + str(intercept))
 
 print("n = " + str(len(data)))
+
+plt.scatter(xlist, ylist, c ="red", marker="x", linewidths=0.5)
+
+plt.show()
