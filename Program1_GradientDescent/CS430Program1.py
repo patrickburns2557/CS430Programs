@@ -1,28 +1,88 @@
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 dataX = []
 dataY = []
+numPoints = 0
+theta0 = 0
+theta1 = 0
+alpha = 0.024
+epsilon = 0.0001
+NUMLOOPS = 0
+
 x_squared = []
 xy = []
-numPoints = 0
 
 #Read in data and save to an array for X and an array for Y
 with open(Path(__file__).with_name("data.txt"), 'r') as input:
     line = input.readline()
     while line:
         line = line.split(",")
-        x = float(line[0])
-        dataX.append(x)
-        y = float(line[1])
-        dataY.append(y)
+        dataX.append(float(line[0]))
+        dataY.append(float(line[1]))
 
         line = input.readline()
 numPoints = len(dataX)
 
-#for point in data:
-#   print("(" + str(point[0]) + "," + str(point[1]) + "), ", end='')
+
+testedEpsilon = 999
+jValue = 0
+
+while testedEpsilon > epsilon:
+    NUMLOOPS += 1
+
+    temp = 0
+    for i in range(numPoints):
+        temp += math.pow((theta0 + theta1*dataX[i] - dataY[i]), 2)
+    jValue = temp/(2*numPoints)
+
+    summation0 = 0
+    summation1 = 0
+    for i in range(numPoints):
+        summation0 += theta0 + theta1*dataX[i] - dataY[i]
+        summation1 += (theta0 + theta1*dataX[i] - dataY[i])*dataX[i]
+    tempTheta0 = theta0 - (alpha*(summation0 / numPoints))
+    tempTheta1 = theta1 - (alpha*(summation1 / numPoints))
+
+    testedEpsilon = math.sqrt(math.pow((tempTheta0-theta0), 2) + math.pow((tempTheta1-theta1), 2))
+    
+
+
+    theta0 = tempTheta0
+    theta1 = tempTheta1
+
+    print("======================")
+    print("LOOP " + str(NUMLOOPS))
+    print("JValue = " + str(jValue))
+    print("TestedEpsilon = " + str(testedEpsilon))
+    print("Theta0 = " + str(theta0))
+    print("Theta1 = " + str(theta1))
+    print("======================\n")
+
+
+f = lambda x: theta1*x + theta0
+
+x = np.array([min(dataX), max(dataX)])
+
+
+
+plt.plot(x, f(x), c='purple', label="lin reg")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #save lists for x^2 and x*y
@@ -77,8 +137,38 @@ plt.plot(x, f(x), c='g')
 #plt.plot(X, X*slope + intercept, 'g')
 #plt.plot(X, X*(-1) + 3, 'r')
 
-#plt.xlim(-5, 25)
+#plt.xlim(4, 24)
+#plt.ylim(-5, 25)
 
-#plt.plot(dataX, dataX*slope + intercept, 'r')
 
+
+pred1x = 35
+pred2x = 70
+
+pred1y = f(pred1x)
+pred2y = f(pred2x)
+
+#plt.scatter(pred1x, pred1y, c='orange', marker='^')
+#plt.scatter(pred2x, pred2y, c='black', marker='^')
+
+
+
+
+
+
+
+
+
+
+
+######################################
+print("Number of loops: " + str(NUMLOOPS))
+
+
+#plt.xlim(0,100)
+#plt.ylim(0,100)
+plt.scatter(dataX, dataY, c="red", marker="x", linewidths=0.5)
+plt.xlabel("Population of City in 10,000s")
+plt.ylabel("Profit in $10,000s")
+plt.legend(loc='best')
 plt.show()
