@@ -8,7 +8,7 @@ dataY = []
 numPoints = 0
 theta0 = 0
 theta1 = 0
-alpha = 0.024
+alpha = 0.01
 epsilon = 0.0001
 NUMLOOPS = 0
 
@@ -28,15 +28,9 @@ numPoints = len(dataX)
 
 
 testedEpsilon = 999
-jValue = 0
 
 while testedEpsilon > epsilon:
     NUMLOOPS += 1
-
-    temp = 0
-    for i in range(numPoints):
-        temp += math.pow((theta0 + theta1*dataX[i] - dataY[i]), 2)
-    jValue = temp/(2*numPoints)
 
     summation0 = 0
     summation1 = 0
@@ -52,7 +46,7 @@ while testedEpsilon > epsilon:
 
     theta0 = tempTheta0
     theta1 = tempTheta1
-
+'''
     print("======================")
     print("LOOP " + str(NUMLOOPS))
     print("JValue = " + str(jValue))
@@ -60,7 +54,7 @@ while testedEpsilon > epsilon:
     print("Theta0 = " + str(theta0))
     print("Theta1 = " + str(theta1))
     print("======================\n")
-
+'''
 
 f = lambda x: theta1*x + theta0
 
@@ -148,13 +142,21 @@ pred2x = 70
 pred1y = f(pred1x)
 pred2y = f(pred2x)
 
-#plt.scatter(pred1x, pred1y, c='orange', marker='^')
-#plt.scatter(pred2x, pred2y, c='black', marker='^')
+plt.scatter(pred1x, pred1y, c='orange', marker='^')
+plt.scatter(pred2x, pred2y, c='black', marker='^')
 
+pred1y2 = theta0 + theta1*pred1x
+pred2y2 = theta0 + theta1*pred2x
 
+plt.scatter(pred1x, pred1y2, c='blue', marker='o')
+plt.scatter(pred2x, pred2y2, c='black', marker='o')
 
-
-
+print("least squares:")
+print("1: " + str(pred1y))
+print("2: " + str(pred2y))
+print("gradient descent:")
+print("1: " + str(pred1y2))
+print("2: " + str(pred2y2))
 
 
 
