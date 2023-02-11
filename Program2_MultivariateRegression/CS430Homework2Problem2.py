@@ -6,7 +6,6 @@ import statistics
 #X1 = size of houses (ft^2)
 #X2 = # of bedrooms
 #Y  = price of house
-
 dataX1 = []
 dataX2 = []
 dataY = []
@@ -16,7 +15,12 @@ theta0 = 0
 theta1 = 0
 theta2 = 0
 alpha = 0.01
-epsilon = 0.0001
+epsilon = 0.00001
+
+
+#####################################
+# Loading Data
+#####################################
 
 #Read in data and save to an array for X1, an array for X2, and an array for Y
 with open(Path(__file__).with_name("data1.txt"), 'r') as input:
@@ -30,7 +34,12 @@ with open(Path(__file__).with_name("data1.txt"), 'r') as input:
         line = input.readline()
 numPoints = len(dataX1)
 
-#Normalize data
+
+
+#####################################
+# Normalizing Data
+#####################################
+
 stdevX1 = statistics.stdev(dataX1)
 stdevX2 = statistics.stdev(dataX2)
 stdevY = statistics.stdev(dataY)
@@ -48,9 +57,9 @@ for i in range(numPoints):
 
 
 #####################################
-#PART 1: Gradient Descent
+# PART 1: Gradient Descent
 #####################################
-
+numloops = 0
 #initially set as an arbitrary large value
 testedEpsilon = 999
 #keep looping the gradient descent algorithm until the tested episolon is lower than the target epsilon
@@ -80,49 +89,54 @@ print("Gradient Descent: ")
 print("theta0: " + str(theta0))
 print("theta1: " + str(theta1))
 print("theta2: " + str(theta2))
+print()
 
 
 
-print("\n")
 #####################################
-#PART 2: Normal Equation
+# PART 2: Normal Equation
 #####################################
-
 
 #convert the data matrix into a numpy matrix
 X = np.matrix(data)
 Y = np.matrix(dataY)
 Y = Y.transpose()
 
-
-
-
-
+#X transpose
 XT = X.transpose()
 
+#X*X^T
 XTX = np.matmul(XT, X)
 
+#inverse of X*X^T
 XTXInv = np.linalg.inv(XTX)
 
+#(Inverse found above)*X^T
 XTXInvXT = np.matmul(XTXInv, XT)
 
+#(Above matrix product)*Y
 theta = np.matmul(XTXInvXT, Y)
 
 print("Normal Equation:")
 print("theta0: " + str(theta[0,0]))
 print("theta1: " + str(theta[1,0]))
 print("theta2: " + str(theta[2,0]))
+print()
 
 
+#####################################
+# Predictions
+#####################################
 
-predx1 = (1650 - meanX1)/stdevX1
-predx2 = (3 - meanX2)/stdevX2
+#normalize the input X values before using it to predict the price
+predX1 = (1650 - meanX1)/stdevX1
+predX2 = (3 - meanX2)/stdevX2
 
-predgrady = theta0 + (theta1*predx1) + (theta2*predx2)
-predgrady = (predgrady*stdevY) + meanY #"un-normalize" the result to get the actual prediction
-print("Gradient Descent guess: " + str(predgrady))
+predGradY = theta0 + (theta1*predX1) + (theta2*predX2)
+predGradY = (predGradY*stdevY) + meanY #"un-normalize" the result to get the actual prediction
+print("Gradient Descent guess: $" + str(predGradY))
 
 
-prednormy = theta[0,0] + (theta[1,0]*predx1) + (theta[2,0]*predx2)
+prednormy = theta[0,0] + (theta[1,0]*predX1) + (theta[2,0]*predX2)
 prednormy = (prednormy*stdevY) + meanY #"un-normalize" the result to get the actual prediction
-print("Normal Equation guess:  " + str(prednormy))
+print("Normal Equation guess:  $ " + str(prednormy))
