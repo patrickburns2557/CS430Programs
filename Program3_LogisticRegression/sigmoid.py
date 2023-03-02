@@ -5,7 +5,7 @@ def sigmoid(input):
     f = lambda x: 1 / (1 + math.pow(math.e, -x))  #lambda expression to easily reuse later for each type
     
     #if input is float or int, just perform the calculation and return result
-    if type(input) is int or type(input) is float:
+    if type(input) is int or type(input) is float or type(input) is np.float64:
         output = f(input)
         return output
     

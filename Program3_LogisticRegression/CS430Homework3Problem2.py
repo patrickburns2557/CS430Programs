@@ -31,7 +31,7 @@ with open(Path(__file__).with_name("data2.txt"), 'r') as input:
         line = line.split(",")        
         dataX1.append(float(line[0]))
         dataX2.append(float(line[1]))
-        dataY.append(bool(int(line[2]))) #first cast to Int to get rid of the newline character at the end so it can be cast to Bool
+        dataY.append(float(line[2]))
 
         line = input.readline()
 numPoints = len(dataX1)
@@ -39,12 +39,6 @@ numPoints = len(dataX1)
 #####################################
 # Plotting
 #####################################
-bruh = [1, 3, 5, 7]
-print("input:  " + str(bruh))
-print("output: " + str(sigmoid(bruh)))
-bruh2 = 0
-print("input:  " + str(bruh2))
-print("output: " + str(sigmoid(bruh2)))
 #Separate the admitted from the non-admitted to plot with different markers
 X1Pass = []
 X2Pass = []
@@ -64,6 +58,44 @@ plt.xlabel("Exam 1 Score")
 plt.ylabel("Exam 2 Score")
 plt.legend(loc="best")
 #plt.show()
+
+
+
+#####################################
+# Cost
+#####################################
+
+summation = 0.0
+theta = np.array([0,0,0])
+
+#Save the X vaules into an array of array, with 1 as the first value for x0, to be stored into a numpy matrix
+for i in range(numPoints):
+    data.append([float(1), dataX1[i], dataX2[i]])
+
+#Calculate theta*XTranspose
+X = np.array(data)
+XT = X.transpose()
+thetaXT = np.matmul(theta, XT)
+
+#Get the summation of the cost function
+for i in range(numPoints):
+    summation += -dataY[i]*math.log(sigmoid(thetaXT[i])) - (1-dataY[i])*math.log(1 - sigmoid(thetaXT[i]))
+
+#summation += -dataY[i]*math.log(sigmoid(thetaXT[i])) - (1-dataY[i])*math.log(1 - sigmoid(thetaXT[i]))
+
+#Divide summation by the number of data points
+cost = summation / numPoints
+
+print("Cost with all thetas initialized to zero: " + str(cost))
+
+
+
+
+
+
+
+
+
 
 ############################################################
 
@@ -132,9 +164,7 @@ print()
 X = np.array(data)
 Y = np.array(dataY)
 Y = Y.transpose()
-print("type of X: " + str(type(X)))
-print("input:  " + str(X))
-print("output: " + str(sigmoid(X)))
+
 #X transpose
 XT = X.transpose()
 
