@@ -2,30 +2,22 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import statistics
-#from scipy.optimize import minimize
 import scipy
 from sigmoid import *
 
-#X1 = size of houses (ft^2)
-#X2 = # of bedrooms
-#Y  = price of house
+#X1 = exam 1 score
+#X2 = exam 2 score
+#Y  = 1 if admitted, 0 if not admitted
 dataX1 = []
 dataX2 = []
 dataY = []
 data = []
 numPoints = 0
-theta0 = 0
-theta1 = 0
-theta2 = 0
-alpha = 0.01
-epsilon = 0.000001
 
 
 #####################################
 # Loading Data
 #####################################
-
 #Read in data and save to an array for X1, an array for X2, and an array for Y
 with open(Path(__file__).with_name("data2.txt"), 'r') as input:
     line = input.readline()
@@ -34,6 +26,7 @@ with open(Path(__file__).with_name("data2.txt"), 'r') as input:
         dataX1.append(float(line[0]))
         dataX2.append(float(line[1]))
         dataY.append(float(line[2]))
+
         #Save the X values into an array of array, with 1 as the first value for x0, to be stored into a numpy matrix
         data.append([float(1), float(line[0]), float(line[1])])
 
@@ -134,11 +127,51 @@ theta = optimizedCost.x
 #####################################
 # Plotting Decision Boundary
 #####################################
-# Solved θ0 + θ1*x1 + θ2*x2 = 0 for x2 to get the below equation to graph
+# Solved θ0 + θ1*x1 + θ2*x2 = 0 for x2 to get the below equation to graph where x = x1
 f = lambda x: (-theta[0] - theta[1]*x)/theta[2]
 
+#bounds to plot the line over
 x = np.array([30,100])
-y = np.array([30,100])
 
-plt.plot(x, f(x), c='blue', label='decision boundary')
+plt.plot(x, f(x), c='blue', label="Decision Boundary")
+
+
+
+#####################################
+# Prediction
+#####################################
+exam1 = 45
+exam2 = 85
+prediction = sigmoid(theta[0] + theta[1]*exam1 + theta[2]*exam2) #calculating hθ(x)
+print("\nPrediction:")
+print("Based on a exam 1 score of " + str(exam1) + " and an exam 2 score of " + str(exam2))
+print("Admission probability percentage: {:.3f}%".format(prediction*100))
+
+
+
+#####################################
+# Training Accuracy
+#####################################
+numCorrect = 0
+#Iterate through all data points to perform the logistic regression on the data to see how well it performs on the training data
+for i in range(numPoints):
+    prediction = sigmoid(theta[0] + theta[1]*dataX1[i] + theta[2]*dataX2[i]) #perform calculation on data point
+
+    #if the prediction is >= 50% and the actual value for admittance was true, mark as correct prediction
+    if (prediction >= 0.5) and (dataY[i] == 1):
+        numCorrect += 1
+    #if the prediction is <50% and the actual value for admittance was false, also mark as correct prediction
+    elif(prediction < 0.5) and (dataY[i] == 0):
+        numCorrect += 1
+
+print("\nTraining accuracy:")
+print("Number of points tested: " + str(numPoints))
+print("Number correct: " + str(numCorrect))
+print("Accuracy: " + str(numCorrect/numPoints*100) + "%")
+
+
+
+
+
+#Don't show the plot window until the end so all previous calculations will finish without needing to close the plot window earlier
 plt.show()
