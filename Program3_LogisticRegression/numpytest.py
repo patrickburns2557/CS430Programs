@@ -15,3 +15,10 @@ for i in range(len(A)):
         print(A[i,j])
 
 print(str(math.log10(100)))
+
+B = np.array([[1,2,3], [4, 5, 6]])
+print("before:\n" + str(B))
+
+BT = B.transpose()
+
+print("after:\n" + str(B))
