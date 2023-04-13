@@ -41,6 +41,12 @@ def KMeansAndPlot(initType):
     label1 = np.delete(label1, (0), axis=0)
     label2 = np.delete(label2, (0), axis=0)
 
+    #Print the centroid locations using the specified initialization type
+    print("Centroid locations using " + str(initType) + " initialization:")
+    for centroid in kmeans.cluster_centers_:
+        print("(" + str(centroid[0]) + ", " + str(centroid[1]) + ")")
+    print()
+
     #Plot
     plt.scatter(label0[:, 0], label0[:, 1], marker=".", linewidths=0.5, color="green", label="cluster 1")
     plt.scatter(label1[:, 0], label1[:, 1], marker=".", linewidths=0.5, color="blue", label="cluster 2")
@@ -59,6 +65,7 @@ def KMeansAndPlot(initType):
 KMeansAndPlot("random")
 KMeansAndPlot("k-means++")
 
+
 #Run K-Means 20 times each for random initialization and k-means++ initialization
 # and record the number of iterations each run took 
 randomIters = []
@@ -66,7 +73,6 @@ kmeansplusplus = []
 for i in range(20):
     randomIters.append(KMeansIterations("random"))
     kmeansplusplus.append(KMeansIterations("k-means++"))
-
 randomAvg = sum(randomIters) / len(randomIters)
 kmeansplusplusAvg = sum(kmeansplusplus) / len(kmeansplusplus)
 

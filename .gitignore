@@ -1,4 +1,5 @@
 *.docx
+libsvm-331/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
